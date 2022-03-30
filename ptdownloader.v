@@ -1,7 +1,7 @@
 /*   
   Horstine1337@safe-mail.net 30. Mar. 2022
   To compile download the V compiler from https://vlang.io/
-	Then use in console
+  Then use in console
   $ v ptdownloader.v
 
   Boost Software License - Version 1.0 - August 17th, 2003
