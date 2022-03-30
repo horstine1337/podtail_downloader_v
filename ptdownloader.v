@@ -38,45 +38,45 @@ import net.html
 
 // Find last index of a single character in a string array
 fn last_index_of(str string, search_for_char string) int {
-	assert(search_for_char.len == 1)
-	assert(str.len > 0)
+  assert(search_for_char.len == 1)
+  assert(str.len > 0)
 
-	mut cur_last_index := -1
-	for index, c in str {
-		if c.ascii_str() == search_for_char {
-			cur_last_index = index
-		}
-	}
-	return cur_last_index
+  mut cur_last_index := -1
+  for index, c in str {
+    if c.ascii_str() == search_for_char {
+      cur_last_index = index
+    }
+  }
+  return cur_last_index
 }
 
 
 // Didn't find anything but [array] in [array] and don't want to convert big html strings
 // This is a standard string.contains(string) method
 fn contains(str string, search_for_str string) bool {
-	assert(str.len > 0)
-	assert(search_for_str.len > 0)
-	assert(str.len >= search_for_str.len)
+  assert(str.len > 0)
+  assert(search_for_str.len > 0)
+  assert(str.len >= search_for_str.len)
 
-	for i in 0..str.len {
-		if str[i] == search_for_str[0] {
-			//break early if rest of str is shorter than string to search for
-			if str.len-i < search_for_str.len {
-				return false
-			}
-			mut not_equal := false
-			for j in 0..search_for_str.len {
-				if str[i+j] != search_for_str[j] {
-					not_equal = true
-					break
-				}
-			}
-			if !not_equal {
-				return true
-			}
-		}
-	}
-	return false
+  for i in 0..str.len {
+    if str[i] == search_for_str[0] {
+      //break early if rest of str is shorter than string to search for
+      if str.len-i < search_for_str.len {
+        return false
+      }
+      mut not_equal := false
+      for j in 0..search_for_str.len {
+        if str[i+j] != search_for_str[j] {
+          not_equal = true
+          break
+        }
+      }
+      if !not_equal {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 
@@ -84,59 +84,59 @@ fn contains(str string, search_for_str string) bool {
 // or some non standard package, this will do for now
 // This looks for certain sub strings in the given html to find .mp3 URLs
 fn find_all_mp3_links(h string) []string {
-	assert(h.len > 0)
-	
-	mut ret := []string{}
+  assert(h.len > 0)
+  
+  mut ret := []string{}
 
-/* 	<a href="https://feeds.soundcloud.com/stream/1blabla.mp3" 
-	target="_blank"	title="Download">
-	<i class="icon-cloud-download" aria-hidden="true"></i> Download</a> */
-	
-	for i in 0..h.len {
-		//if cursor is on '"http'
-		if h.len > i+4
-			&& h[i].ascii_str() == '"'
-			&& h[i+1].ascii_str() == 'h'
-			&& h[i+2].ascii_str() == 't'
-			&& h[i+3].ascii_str() == 't'
-			&& h[i+4].ascii_str() == 'p' {
+/*   <a href="https://feeds.soundcloud.com/stream/1blabla.mp3" 
+  target="_blank"  title="Download">
+  <i class="icon-cloud-download" aria-hidden="true"></i> Download</a> */
+  
+  for i in 0..h.len {
+    //if cursor is on '"http'
+    if h.len > i+4
+      && h[i].ascii_str() == '"'
+      && h[i+1].ascii_str() == 'h'
+      && h[i+2].ascii_str() == 't'
+      && h[i+3].ascii_str() == 't'
+      && h[i+4].ascii_str() == 'p' {
 
-			//just having some fun here
-			mut j := i+1 // we don't want the '"' in the final link URL
-			mut found := false
-			mut buf := strings.new_builder(0)
-			
-			for !found || j > h.len {
-				if h.len > j+4
-					&& h[j].ascii_str() == '.'
-					&& h[j+1].ascii_str() == 'm'
-					&& h[j+2].ascii_str() == 'p'
-					&& h[j+3].ascii_str() == '3'
-					&& h[j+4].ascii_str() == '"' {
+      //just having some fun here
+      mut j := i+1 // we don't want the '"' in the final link URL
+      mut found := false
+      mut buf := strings.new_builder(0)
+      
+      for !found || j > h.len {
+        if h.len > j+4
+          && h[j].ascii_str() == '.'
+          && h[j+1].ascii_str() == 'm'
+          && h[j+2].ascii_str() == 'p'
+          && h[j+3].ascii_str() == '3'
+          && h[j+4].ascii_str() == '"' {
 
-						buf.write_byte(h[j])
-						buf.write_byte(h[j+1])
-						buf.write_byte(h[j+2])
-						buf.write_byte(h[j+3])
-						found = true
-					} else {
-						if h[j].ascii_str() == '"' {
-							// if there is an '"' between http and .mp3,
-							// thats not the link we are looking for
-							break
-						}
+            buf.write_byte(h[j])
+            buf.write_byte(h[j+1])
+            buf.write_byte(h[j+2])
+            buf.write_byte(h[j+3])
+            found = true
+          } else {
+            if h[j].ascii_str() == '"' {
+              // if there is an '"' between http and .mp3,
+              // thats not the link we are looking for
+              break
+            }
 
-						buf.write_byte(h[j])
-						j++
-					}
-			}
-			if found {
-				ret << buf.str()			
-			}
-		}
-	}
+            buf.write_byte(h[j])
+            j++
+          }
+      }
+      if found {
+        ret << buf.str()      
+      }
+    }
+  }
 
-	return ret
+  return ret
 }
 
 
@@ -156,21 +156,21 @@ fn download_links(links []string, path_to string){
     index := last_index_of(link, '/')
     // if empty string or no '/' was found, ignore the current link
     if index == -1 || link == "" {
-			continue
-		}
-  	save_to := link[index+1 .. link.len]
+      continue
+    }
+    save_to := link[index+1 .. link.len]
     // if the file already exists, ignore
     if os.exists(path_to + save_to) {
-			continue
-		}
+      continue
+    }
     //download and save to given directory
     println("Downloading " + link + " to " + path_to + save_to)
-		if !os.is_dir(path_to) {
-			os.mkdir_all(path_to) or { 
-				println(err)
-				continue
-			}
-		}
+    if !os.is_dir(path_to) {
+      os.mkdir_all(path_to) or { 
+        println(err)
+        continue
+      }
+    }
     http.download_file(link, path_to + save_to) or {continue}
   }
 }
@@ -182,12 +182,12 @@ fn find_all_download_links_by_regex(podcast_url string) []string {
   mut done := false
   mut cur_page_number := 1
   mut ret := []string{}
-	// Look ma, magic!
-	mp3_reg_query := 'http?s:[^"]*\\\\.mp3'
-  mut mp3_reg := regex.regex_opt(mp3_reg_query) or { panic(err) }
+  // Look ma, magic!
+  // mp3_reg_query := 'http?s:[^"]*.mp3'
+  // mut mp3_reg := regex.regex_opt(mp3_reg_query) or { panic(err) }
 
   for !done {
-	  url_for_current_page := "$podcast_url?page=$cur_page_number&append=false&sort=latest&q="
+    url_for_current_page := "$podcast_url?page=$cur_page_number&append=false&sort=latest&q="
     cur_page_number++
 
     println("Searching download links on " + url_for_current_page)
@@ -196,20 +196,20 @@ fn find_all_download_links_by_regex(podcast_url string) []string {
       done = true
     }
 
-		found_mp3_links_array := find_all_mp3_links(tmp_received_html)
-		ret << found_mp3_links_array
+    found_mp3_links_array := find_all_mp3_links(tmp_received_html)
+    ret << found_mp3_links_array
   }
 
   return ret
 }
 
 fn find_all_download_links_by_dom(podcast_url string) []string {
-	mut done := false
+  mut done := false
   mut cur_page_number := 1
   mut ret := []string{}
 
-	for !done {
-	  url_for_current_page := "$podcast_url?page=$cur_page_number&append=false&sort=latest&q="
+  for !done {
+    url_for_current_page := "$podcast_url?page=$cur_page_number&append=false&sort=latest&q="
     cur_page_number++
 
     println("Searching download links on " + url_for_current_page)
@@ -219,13 +219,13 @@ fn find_all_download_links_by_dom(podcast_url string) []string {
     }
 
     //put some tag around the downloaded html to fix an issue with dom.d
-		//just copy&pasted from the D implementation; didn't even test without the extra tags
-		mut document := html.parse('<div>' + tmp_received_html + '</div>')
-		download_link_tags := document.get_tag_by_attribute_value("title", "Download")
+    //just copy&pasted from the D implementation; didn't even test without the extra tags
+    mut document := html.parse('<div>' + tmp_received_html + '</div>')
+    download_link_tags := document.get_tag_by_attribute_value("title", "Download")
 
-		for tag in download_link_tags {
-			ret << tag.attributes['href']		
-		}
+    for tag in download_link_tags {
+      ret << tag.attributes['href']
+    }
   }
 
   return ret
@@ -253,8 +253,8 @@ fn main() {
   mut links := []string{}
   mut dl_dir := "./"
 
-	mut args := os.args.clone()[1..os.args.len] // get rid of name 
-	//prepare arguments
+  mut args := os.args.clone()[1..os.args.len] // get rid of name 
+  //prepare arguments
   if args.len == 0 {
     write_help_message()
     return
@@ -280,9 +280,9 @@ fn main() {
   //do the work
   if use_regex {
     links = find_all_download_links_by_regex(podcast_url)
-	}
+  }
   else {
     links = find_all_download_links_by_dom(podcast_url)
-	}
+  }
   download_links(links, dl_dir)
 }
