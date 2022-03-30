@@ -44,11 +44,11 @@ Don't forget to put the "/" at the end of your download directory path. Or "\\" 
 The optional `dom` option will switch between the look up methods for the download URLs.
 The default way to look up podcast episodes is by utilizing regex and finding URLs ending with ".mp3".
 
-The dom option will instead try to download anything in the "href" of any html element with `title="Download"`,
+The `dom` option will instead try to download anything in the "href" of any html element with `title="Download"`,
 using CSS selector `a[title*=\"Download\"]`
 
 ## Precompiled Binaries
-The provided binary `ptdownloader` is for Linux x64.
+The provided binary `ptdownloader` is for Linux x64. The untested `ptdownloader.exe` is for Windows x64.
 
 ## License
 Boost Software License - Version 1.0 - August 17th, 2003
